@@ -688,7 +688,7 @@ Como se ha mencionado anteriormente Azure es el PaaS de Microsoft. A partir del 
 
 ## Alta en la cuenta de Azure
 
-Lo primero que hay que hacer es darse de alta en Azure, para ello debéis visitar el siguiente [enlace](https://azure.microsoft.com/es-es/free/).
+Lo primero que hay que hacer es darse de alta en Azure, para ello debéis visitar el siguiente [enlace](https://azure.microsoft.com/es-es/free/students/).
 
 <img src="images/altaAzure.png" alt="Cread la cuenta gratuita de Azure." width="90%">
 
