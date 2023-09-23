@@ -1,6 +1,6 @@
-[![GitHub tag](https://img.shields.io/github/tag/cafernandezlo/es_fic_muei_ics.svg)](https://GitHub.com/cafernandezlo/es_fic_muei_ics/tags/)
+[![GitHub tag](https://img.shields.io/github/tag/cafernandezlo/es_fic_muei_ics.svg)](https://GitHub.com/TheMVS/es_fic_muei_ics/tags/)
 [![GitHub license](https://img.shields.io/github/license/cafernandezlo/es_fic_muei_ics.svg)](https://github.com/cafernandezlo/es_fic_muei_ics/blob/master/LICENSE)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/cafernandezlo/es_fic_muei_ics/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/TheMVS/es_fic_muei_ics/graphs/commit-activity)
 
 # Informática como servicio
 
@@ -21,6 +21,6 @@ Se recomienda el uso de algúna distribución de Linux como base (Debian, CentOS
 
 ## Comienza el curso!
 
-[Plataforma como servicio](https://cafernandezlo.github.io/es_fic_muei_ics/ics.html)
+[Plataforma como servicio](https://TheMVS.github.io/es_fic_muei_ics/ics.html)
 
 Este curso tiene licencia MIT.
