@@ -1,7 +1,7 @@
 ---
 title: "Informática como servicio"
 subtitle: "Plataforma como servicio (PaaS)"
-author: "Carlos Fernandez-Lozano"
+author: "Alejandro Puente Castro"
 date: '`r format(Sys.Date(),"Última modificación: %e %b %Y")`'
 output:
   html_document:
@@ -63,16 +63,16 @@ A continuación se mostrarán un conjunto mínimo de pasos necesarios para confi
 Para verificar que la instalación es correcta y que todo está funcionando adecuadamente, se clona una aplicación desde GitHub (se podrían descargar desde el propio DockerHub)
 
 ```{bash eval=F}
-cfernandez:~>mkdir ics-master
-cfernandez :~>cd ics-master
-cfernandez :~/ics-master> git clone -b v1 https://github.com/docker-training/node-bulletin-board
+apuentec:~>mkdir ics-master
+apuentec :~>cd ics-master
+apuentec :~/ics-master> git clone -b v1 https://github.com/docker-training/node-bulletin-board
 Cloning into 'node-bulletin-board'...
 remote: Enumerating objects: 190, done.
 remote: Total 190 (delta 0), reused 0 (delta 0), pack-reused 190
 Receiving objects: 100% (190/190), 194.43 KiB | 1.28 MiB/s, done.
 Resolving deltas: 100% (82/82), done.
-cfernandez:~/ics-master/>cd node-bulletin-board/bulletin-board-app
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app/>ls
+apuentec:~/ics-master/>cd node-bulletin-board/bulletin-board-app
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app/>ls
 app.js   Dockerfile  index.html  package.json  server.js
 backend  fonts       LICENSE     readme.md     site.css
 ```
@@ -80,7 +80,7 @@ backend  fonts       LICENSE     readme.md     site.css
 Mostrad el contenido del fichero *Dockerfile*
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app> cat Dockerfile 
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app> cat Dockerfile 
 FROM node:6.11.5
 
 WORKDIR /usr/src/app
@@ -95,7 +95,7 @@ CMD [ "npm", "start" ]
 el contenido del fichero `package.json` es el siguiente:
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>cat package.json 
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>cat package.json 
 {
   "name": "vue-event-bulletin",
   "version": "1.0.0",
@@ -156,7 +156,7 @@ es recomendable reiniciar el equipo o, al menos, salir de la sesión del usuario
 Verifica que el demonio de docker está corriendo en el sistema y que no haya ningún problema:
 
 ```{bash eval=F}
-cfernandez:~>systemctl status docker
+apuentec:~>systemctl status docker
 docker.service - Docker Application Container Engine
    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: e
    Active: active (running) since Mon 2019-11-04 11:38:16 CET; 56min ago
@@ -183,7 +183,7 @@ nov 04 12:21:43 xps-13-9360 dockerd[29858]: time="2019-11-04T12:21:43.758197196+
 Genera la imagen del proyecto que acabas de descargar. Para ello debes ejecutar el comando `$docker image build`.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker image build -t bulletinboard:1.0 .
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker image build -t bulletinboard:1.0 .
 Sending build context to Docker daemon  45.57kB
 Step 1/6 : FROM node:6.11.5
 6.11.5: Pulling from library/node
@@ -333,7 +333,7 @@ A continuación se presentarán los comandos de gestión básicos.
 Inicializa el contenedor con la nueva imagen. Para ello debes ejecutar el comando `$docker container run`. En este caso fíjate que se publica en el puerto 8000 de la máquina local y que se enlaza con el 8080 del contenedor.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker container run --publish 8000:8080 --detach --name bb bulletinboard:1.0
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker container run --publish 8000:8080 --detach --name bb bulletinboard:1.0
 e70e42aadc1b851d610bbcc79f928516ab9b5a6755b5dc54d459c993db2356a4
 
 ```
@@ -349,7 +349,7 @@ Abre un navegador web con la siguiente dirección [localhost:8000](localhost:800
 Lista los contenedores Docker corriendo en el sistema y elimina el que acabas de crear. Para listar contenedores activos se utiliza el comando `docker ps`.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker ps
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
 e70e42aadc1b        bulletinboard:1.0   "npm start"         3 minutes ago       Up 3 minutes        0.0.0.0:8000->8080/tcp   bb
 
@@ -358,7 +358,7 @@ e70e42aadc1b        bulletinboard:1.0   "npm start"         3 minutes ago       
 Para liminar un contenedor activo que está corriendo, sin pararlo, se debe utilizar el comando `$docker container rm --force` y dar el nombre del contenedor, en este caso bb o los primeros dígitos del CONTAINER ID de la siguiente forma. En caso de tratar de eliminar un contenedor que está corriendo nos dará un error:
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker container rm --force bb
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker container rm --force bb
 bb
 
 ```
@@ -368,7 +368,7 @@ bb
 Es posible listar las imágenes de aplicaciones generadas con el comando `$docker images`.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker images
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 bulletinboard       1.0                 2cfc10259620        10 minutes ago      681MB
 hello-world         latest              fce289e99eb9        10 months ago       1.84kB
@@ -380,7 +380,7 @@ node                6.11.5              852391892b9f        24 months ago       
 Así como eliminar imágenes del sistema con el comando `$docker rmi`.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker rmi 2cfc10259620
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker rmi 2cfc10259620
 Untagged: bulletinboard:1.0
 Deleted: sha256:2cfc1025962090cd26fe03f9b6e1effe6deea48dcba59239dbbc80bcec5e7864
 Deleted: sha256:0756607407a1155bcb0a4cb4d096ccbec4cc94b5b3f73d744c63c05a777a65c4
@@ -397,7 +397,7 @@ Deleted: sha256:bb9d9d04eaa98ca064f89f1da2ba23edd8cfacf634d5d999e513b02d60a2cc62
 es posible que para alguna imagen sea necesario forzar la eliminación de la imagen.
 
 ```{bash eval=F}
-cfernandez:~/ics-master/node-bulletin-board/bulletin-board-app>docker rmi -f fce289e99eb9
+apuentec:~/ics-master/node-bulletin-board/bulletin-board-app>docker rmi -f fce289e99eb9
 Untagged: hello-world:latest
 Untagged: hello-world@sha256:c3b4ada4687bbaa170745b3e4dd8ac3f194ca95b2d0518b417fb47e5879d9b5f
 Deleted: sha256:fce289e99eb9bca977dae136fbe2a82b6b7d4c372474c9235adc1741675f587e
@@ -408,7 +408,7 @@ Deleted: sha256:fce289e99eb9bca977dae136fbe2a82b6b7d4c372474c9235adc1741675f587e
 Se puede realizar una búsqueda de las imágenes disponibles en Dockerhub por línea de comandos sin necesidad de acceder a la web. Por ejemplo para el sistema operativo Centos con el comando `$docker search centos`. Nos devolverá todas aquellas imágenes públicas de DockerHub que aparezcan en la búsqueda por la palabra clave indicando además si es la imagen oficial y el número de votos positivos o estrellas que otros usuarios le han dado. Además de una muy breve descripción de la imagen.
 
 ```{bash eval=F}
-cfernandez :~>docker search centos
+apuentec :~>docker search centos
 NAME                               DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
 centos                             The official build of CentOS.                   5648                [OK]                
 ansible/centos7-ansible            Ansible on Centos7                              125                                     [OK]
@@ -442,7 +442,7 @@ smartentry/centos                  centos with smartentry                       
 Para descargar una de las posibles imágenes se debe usar el comando `$docker image pull` seguido del nombre de la imagen. No es obligatorio pero es habitual que las imágenes generadas por el usuario lleven indicado de alguna manera el usuario o la imagen de partida base más el nombre de la imagen final, habitualmente separado por `/`. Algunas aprovechan a poner la versión de la imagen base por ejemplo `centos/mysql-57-centos7` nos indica que el usuario centos ha montado un mysql version 5.7 sobre un centos versión 7. El tag por defecto es `latest`. En caso de que un usuario suba una imagen y no ponga versión es la que pondrá por defecto. Es más correcto versionar siempre las imágenes porque el `latest` de hoy, no tiene por qué ser el de mañana y puede llevar a confusiones.
 
 ```{bash eval=F}
-cfernandez:~>docker image pull kinogmt/centos-ssh
+apuentec:~>docker image pull kinogmt/centos-ssh
 Using default tag: latest
 latest: Pulling from kinogmt/centos-ssh
 Image docker.io/kinogmt/centos-ssh:latest uses outdated schema1 manifest format. Please upgrade to a schema2 image for better future compatibility. More information at https://docs.docker.com/registry/spec/deprecated-schema-v1/
@@ -465,7 +465,7 @@ docker.io/kinogmt/centos-ssh:latest
 Es posible arrancar una máquina y acceder a ella de forma interactiva. Es muy útil, sobre todo al principio para chequear que todo está bien o buscar determinados ficheros y rutas. Para ello es necesario lanzar el comando `$docker container run -it`. En este caso se añade el nombre de la imagen y se le indica el comando que la imagen debe ejecutar que es `$/bin/bash` para que levante una shell.
 
 ```{bash eval=F}
-cfernandez:~>docker container run -it kinogmt/centos-ssh /bin/bash
+apuentec:~>docker container run -it kinogmt/centos-ssh /bin/bash
 [root@c1576d0b4968 /]# rpm -q centos-release
 centos-release-6-7.el6.centos.12.3.x86_64
 [root@c1576d0b4968 /]# 
@@ -476,7 +476,7 @@ centos-release-6-7.el6.centos.12.3.x86_64
 En ocasiones es necesario revisar los logs de la máquina. Es cierto que `Docker` puede ser poco informativo en alguna ocasión y se trata de una de ellas. Podemos lanzar un comando para ejecutar un contenedor y ver que éste se cae sin motivo aparente. Para consultar los logs se puede utilizar el comando `$docker logs` seguido del CONTAINER ID. Por ejemplo, la salida de log del contenedor del ejemplo de bulletinboard es la siguiente:
 
 ```{bash eval=F}
-cfernandez:~ics-master/node-bulletin-board/bulletin-board-app>docker logs d343
+apuentec:~ics-master/node-bulletin-board/bulletin-board-app>docker logs d343
 
 > vue-event-bulletin@1.0.0 start /usr/src/app
 > node server.js
@@ -490,7 +490,7 @@ Magic happens on port 8080...
 Una vez se han llevado a cabo tareas con `Docker` y dependiendo de la capacidad del disco duro del equipo sobre el que se trabaja no es extraño que notemos un uso elevado del disco duro. Es recomendable no tener todas las imágenes posibles sino únicamente aquellas que necesitamos como base de las finales o, directamente, las imágenes finales con las que se está trabajando. Normalmente la forma más habitual de trabajar es generar una imagen base pesada con todos los recursos necesarios y montar una segunda imagen que parte de ella y lleva la configuración específcia del entorno. Esto es así porque se espera que la imagen base no cambie nada (o poco) a lo largo del ciclo de vida del desarrollo de la aplicación y sin embargo, la imagen que contiene la propia aplicación sí. Si se parte de sistemas complejos/pesados o con muchas dependencias se evita que los tiempos de generación de la imagen sean eternos aunque, algunas veces, se deben sufrir porque aparecen nuevas dependencias no contempladas. En este caso en el equipo hay una imagen que ocupa 773MB, podemos verlo con el comando `$docker image ls`.
 
 ```{bash eval=F}
-cfernandez:~/dics-master>docker image ls
+apuentec:~/dics-master>docker image ls
 REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
 kinogmt/centos-ssh   latest              dc8713dad282        3 years ago         773MB
 
@@ -499,9 +499,9 @@ kinogmt/centos-ssh   latest              dc8713dad282        3 years ago        
 Se pueden listar contenedores activos e inactivos y eliminarlos.
 
 ```{bash eval=F}
-cfernandez:~/ics-master>docker container ps
+apuentec:~/ics-master>docker container ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-cfernandez:~/ics-master>docker container ls -a
+apuentec:~/ics-master>docker container ls -a
 CONTAINER ID        IMAGE                COMMAND             CREATED             STATUS                      PORTS               NAMES
 c1576d0b4968        kinogmt/centos-ssh   "/bin/bash"         9 minutes ago       Exited (0) 8 minutes ago                        hungry_ptolemy
 83a2fea9e1b0        kinogmt/centos-ssh   "/bin/bash"         12 minutes ago      Exited (0) 9 minutes ago                        nervous_lederberg
@@ -513,7 +513,7 @@ cc66c4be321a        fce289e99eb9         "/hello"            8 hours ago        
 para eliminar los contenedores bastaría con indicar al comando `$docker container rm` los CONTAINER ID (completos o los primeros dígitos) de aquellos que se quieran eliminar:
 
 ```{bash eval=F}
-cfernandez:~/ics-master>docker container rm c1576d0b4968 83a2fea9e1b0 c965a44e0e12 cc66c4be321a
+apuentec:~/ics-master>docker container rm c1576d0b4968 83a2fea9e1b0 c965a44e0e12 cc66c4be321a
 c1576d0b4968
 83a2fea9e1b0
 c965a44e0e12
@@ -524,7 +524,7 @@ cc66c4be321a
 se podría ser más directo y eliminar todos los contenedores parados de la máquina, más info en el [enlace](https://docs.docker.com/engine/reference/commandline/rm/):
 
 ```{bash eval=F}
-cfernandez:~/ics-master>docker rm $(docker ps -a -q)
+apuentec:~/ics-master>docker rm $(docker ps -a -q)
 ```
 
 en caso de necesitas parar contenedores de la máquina de forma rápida se podría ejecutar de forma similar el comando`$docker stop $(docker ps -a -q)`.
@@ -532,11 +532,11 @@ en caso de necesitas parar contenedores de la máquina de forma rápida se podr�
 para eliminar una imagen se debe utilizar el comando `$docker rmi` seguido del IMAGE ID de la imagen o, al menos, los primeros dígitos.
 
 ```{bash eval=F}
-cfernandez:~/dics-master>docker image ls
+apuentec:~/dics-master>docker image ls
 REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
 kinogmt/centos-ssh   latest              dc8713dad282        3 years ago         773MB
 
-cfernandez:~/ics-master>docker rmi dc8713dad282
+apuentec:~/ics-master>docker rmi dc8713dad282
 Untagged: kinogmt/centos-ssh:latest
 Untagged: kinogmt/centos-ssh@sha256:acdf7798259f859a8e713f2f88511eef5e0f94cb2d2dec078a1fe169a8aacf63
 Deleted: sha256:dc8713dad28219f7be85c1c7ab08fa858905d7b4f78bf4999e6cdcd36eae2377
@@ -692,9 +692,9 @@ Lo primero que hay que hacer es darse de alta en Azure, para ello debéis visita
 
 <img src="images/altaAzure.png" alt="Cread la cuenta gratuita de Azure." width="90%">
 
-Como podéis ver, dispondréis de una crédito de 170€. Además, 12 meses de servicios populares gratuitos y siempre gratis, más de 25 servicios.
+Como podéis ver, dispondréis de un crédito para gastar y acceso a más servicios gratuitos.
 
-**IMPORTANTE** Es necesario crear una nueva cuenta y no usar la cuenta de la Universidad. En caso de usar la cuenta de la UDC dará error por el servidor de dominio al no poder asegurar, con los permisos base que tenemos en la cuenta corporativa, acceso a Azure. _Recomendación_: crear una nueva cuenta de correo dominio @outlook.com y poner un nombre a la cuenta del tipo ics2021.nombre.apellidos
+**IMPORTANTE** Pueden darse dos casos: uno, que funcione la cuenta de la udc; otro, que sea necesario crear una nueva cuenta y no usar la cuenta de la Universidad. En caso de usar la cuenta de la UDC dará error por el servidor de dominio al no poder asegurar, con los permisos base que tenemos en la cuenta corporativa, acceso a Azure. _Recomendación_: crear una nueva cuenta de correo dominio @outlook.com y poner un nombre a la cuenta del tipo ics2023.nombre.apellidos
 
 <img src="images/login.png" alt="Cread la cuenta gratuita de Azure." width="90%">
 
@@ -899,6 +899,8 @@ La documentación de `Docker-compose` es muy completa y puede obtenerse una desc
 **image** se puede especificar la imagen y versión de partida del servicio, incluso se puede usar el IMAGE ID aunque es mucho menos intutitivo. Si la imagen no existe en local, `Docker-compose` trata de descargarla del repositorio público excepto si se ha especificado la etiqueta build.
 
 **build** se pueden especificar los parámetros utilizados a la hora de construir el contenedor. El parámetro build es una cadena de texto que especifica la ruta al contexto de construcción. Si se ha especificado tanto build como image, `Docker-compose` trata de construir la imagen asignando el nombre del service a la imagen y el tag. Se puede especificar `context`, `dockerfile` y `args`.
+
+  * **Estudiantes con el chip M1 o M2:** Es posible que los contenedores     construidos no funcionen correctamente en vuestros chip. Por suerte, existen soluciones: [enlace](https://everythingdevops.dev/building-x86-images-on-an-apple-m1-chip/)
 
 **args** argumentos en tiempo de construcción que son variables de entorno. 
 
