@@ -2,7 +2,6 @@
 title: "Informática como servicio"
 subtitle: "Plataforma como servicio (PaaS)"
 author: "Alejandro Puente Castro"
-date: '`r format(Sys.Date(),"Última modificación: %e %b %Y")`'
 output:
   html_document:
     df_print: paged
@@ -692,9 +691,9 @@ Lo primero que hay que hacer es darse de alta en Azure, para ello debéis visita
 
 <img src="images/altaAzure.png" alt="Cread la cuenta gratuita de Azure." width="90%">
 
-Como podéis ver, dispondréis de un crédito para gastar y acceso a más servicios gratuitos.
+Como podéis ver, dispondréis de una cantidad de crédito y de tiempo de servicios populares gratuitos.
 
-**IMPORTANTE** Pueden darse dos casos: uno, que funcione la cuenta de la udc; otro, que sea necesario crear una nueva cuenta y no usar la cuenta de la Universidad. En caso de usar la cuenta de la UDC dará error por el servidor de dominio al no poder asegurar, con los permisos base que tenemos en la cuenta corporativa, acceso a Azure. _Recomendación_: crear una nueva cuenta de correo dominio @outlook.com y poner un nombre a la cuenta del tipo ics2023.nombre.apellidos
+**NOTA MUY IMPORTANTE** Puede necesario crear una nueva cuenta y no usar la cuenta de la Universidad o puede ser necesario usarla (depende del momento en que os registréis y puede cambiar entre días consecutivos). En caso de usar la cuenta de la UDC puede dar error por el servidor de dominio al no poder asegurar, con los permisos base que tenemos en la cuenta corporativa, acceso a Azure. _Recomendación_: crear una nueva cuenta de correo dominio @outlook.com y poner un nombre a la cuenta del tipo ics2024.nombre.apellidos
 
 <img src="images/login.png" alt="Cread la cuenta gratuita de Azure." width="90%">
 
