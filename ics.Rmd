@@ -1,7 +1,7 @@
 ---
 title: "Informática como servicio"
 subtitle: "Plataforma como servicio (PaaS)"
-author: "Alejandro Puente Castro"
+author: "Alejandro Puente Castro (a.puentec@udc.es)"
 output:
   html_document:
     df_print: paged
@@ -11,15 +11,31 @@ output:
     toc: yes
 ---
 
+> **Nota importante**
+>
+> Este tutorial utiliza ejemplos de comandos, nombres de recursos, URLs y configuraciones que hacen referencia a servicios en la nube (principalmente Azure).  
+> Debido a la naturaleza de estos servicios, muchos de estos identificadores (como nombres de registros, contenedores, grupos de recursos o direcciones DNS) deben ser **únicos y específicos de cada usuario**.
+>
+> Por este motivo, **no es posible copiar y ejecutar literalmente todos los comandos tal y como aparecen en el documento**.  
+> Será necesario adaptar ciertos valores (nombres, rutas, URLs, etc.) a vuestro propio entorno y cuenta de usuario para que el despliegue funcione correctamente.
+
+
+
 Las plataformas como servicio o (PaaS) son un conjunto de servicios/aplicaciones basados en la nube que permite disponer de una capacidad de cálculo y almacenamiento (aparentemente) ilimitada. Obviamente el uso de dichos recursos suele tener un coste asociado y, a pesar de que el desarrollador puede centrarse en la lógica de negocio, alguien debe asumir el rol de economista y plantear límites ;)
+
+Para entender mejor el modelo PaaS, es útil compararlo con otros modelos cloud. En IaaS (Infrastructure as a Service), el usuario gestiona el sistema operativo y las aplicaciones sobre una infraestructura proporcionada. En SaaS (Software as a Service), el usuario simplemente utiliza una aplicación ya disponible. PaaS se sitúa en un punto intermedio, ya que permite desarrollar aplicaciones sin gestionar ni la infraestructura ni el sistema operativo. En la siguiente imagen, tomada de la web de [Red Hat](https://www.redhat.com/es/topics/cloud-computing/iaas-vs-paas-vs-saas) se pueden apreciar las principales diferencias entre las `-aas` y las soluciones desplegadas en cliente. 
+
+<img src="images/iaas-paas-saas.png" alt="Diferencias entre aas." width="90%">
 
 Una de las ventajas de la virtualización y de la tecnología de contenedores es que el equipo de desarrollo puede trabajar en el mismo entorno exacto en el que se ejecutará la aplicación en producción. Es obvia la ganancia en tiempo a la hora de realizar un despliegue.
 
 Los contenedores son una tecnología que ofrece unas ventajas similares a las máquinas virtuales pero optimizando el uso de recursos. Los contenedores tienen un tiempo de arranque reducido con respecto a una máquina convencional y, además, la memoria que necesita la app ejecutada en el contenedor se ajusta sobre el proceso, en una MV se reserva la memoria completa.
 
-**Azure** es el PaaS de Microsoft, también conocido como la nube hablando en términos coloquiales. Permite el acceso bajo demanda a múltiples recursos computacionales: almacenamiento, servidores, aplicaciones, servicios. Realmente, Azure es SaaS, IaaS y PaaS aunque se considera de forma primaria un PaaS. La gestión necesaria on-premise se aleja del usuario en tanto que el proveedor aloja el hardware y el software en su propia infraestructura y ofrece una solución integrada. En la siguiente imagen, tomada de la web de [Red Hat](https://www.redhat.com/es/topics/cloud-computing/iaas-vs-paas-vs-saas) se pueden apreciar las principales diferencias entre las `-aas` y las soluciones desplegadas en cliente. 
+Otra ventaja clave es la escalabilidad automática. Las plataformas PaaS permiten aumentar o reducir los recursos asignados a una aplicación de forma dinámica en función de la demanda, lo que garantiza un buen rendimiento sin necesidad de intervención manual.
 
-<img src="images/iaas-paas-saas.png" alt="Diferencias entre aas." width="90%">
+Como desventaja, el usuario depende en mayor medida del proveedor, lo que puede limitar ciertas configuraciones avanzadas o generar dependencia tecnológica (vendor lock-in).
+
+**Azure** es el PaaS de Microsoft, también conocido como la nube hablando en términos coloquiales. Permite el acceso bajo demanda a múltiples recursos computacionales: almacenamiento, servidores, aplicaciones, servicios. Realmente, Azure es SaaS, IaaS y PaaS aunque se considera de forma primaria un PaaS. La gestión necesaria on-premise se aleja del usuario en tanto que el proveedor aloja el hardware y el software en su propia infraestructura y ofrece una solución integrada. 
 
 De acuerdo con [Microsoft](https://azure.microsoft.com/en-us/overview/what-is-saas/) en la siguiente imagen se pueden ver las diferencias entre las `-aas` en función de los requisitos hardware y software necesarios.
 
@@ -884,26 +900,39 @@ Como podéis ver en la siguiente imagen, estos pasos han consumido 0.25 céntimo
 La potencia y versatilidad de `Docker` a la hora de generar imágenes y contenedores es clara. La potencia real aparece a la hora de considerar un despliegue desde un punto de vista más ambicioso: contenedores con múltiples aplicaciones. Se ha dicho que la práctica habitual es partir de una imagen base sobre la que se prepara la funcionalidad concreta deseada. Para algunos despliegues sería conveniente, a su vez, disponer de contenedores independientes pero que pudiesen ser lanzados de manera conjunta. No se ha mencionado hasta ahora la [comunicación](https://docs.docker.com/network/) entre contenedores porque en Azure, es más conveniente y simple lanzar un contenedor con diversos contenedores dentro que varios contenedores independientes y que se comuniquen entre ellos. La herramienta que permite la definición y ejecución de múltiples contenedores Docker se conoce como [Docker compose](https://github.com/docker/compose/). El funcionamiento básico se compone de los tres pasos siguientes:
 
 * Dockerfile
-* Definición de los servicios en el fichero `docker-compose.yml`. De esta forma pueden ejecutarse juntos en un entorno aislado
-* Ejecutar el comando `$ docker-compose up`
+* Definición de los servicios en el fichero `docker-compose.yml` o `compose.yml`. De esta forma pueden ejecutarse juntos en un entorno aislado
+* Ejecutar el comando `$ docker-compose up` o `$ docker compose up`
 
-`Docker-compose` no es un Dockerfile supervitaminado. Es necesario que los contenedores se generen y se publiquen con su propio Dockerfile. Lo que `Docker-compose` sí hace por nosotros es gestionar la configuración y el despliegue de múltiples contenedores desde un único fichero. Las diferentes secciones que se definen en el fichero son principalmente las siguientes:
+  * ** Nota:** En versiones recientes, Docker Compose se integra directamente en Docker y se utiliza como `docker compose` (sin guion). La forma antigua `Docker compose` sigue funcionando en muchos entornos, pero se considera obsoleta. En este documento se utilizarán ambos términos indistintamente.
+  
+  | Característica              | `docker-compose` (antiguo)                          | `docker compose` (actual)                          |
+|----------------------------|-----------------------------------------------------|---------------------------------------------------|
+| Tipo                       | Herramienta independiente                           | Integrado en el CLI de Docker                     |
+| Instalación                | Requiere instalación separada                       | Incluido con Docker (v20.10 en adelante)          |
+| Sintaxis                   | `docker-compose up`                                 | `docker compose up`                               |
+| Mantenimiento              | En mantenimiento / obsoleto                         | Activo y recomendado                              |                        |
+| Integración con Docker     | Menor integración                                   | Totalmente integrado                              |
+| Compatibilidad             | Compatible con versiones antiguas                   | Compatible con la mayoría de usos actuales        |
+| Rendimiento                | Algo menor                                          | Mejor rendimiento                                 |
+| Uso recomendado            | Solo en sistemas antiguos                           | Uso estándar actual                               |
+
+`Docker compose` no es un Dockerfile supervitaminado. Es necesario que los contenedores se generen y se publiquen con su propio Dockerfile. Lo que `Docker compose` sí hace por nosotros es gestionar la configuración y el despliegue de múltiples contenedores desde un único fichero. Las diferentes secciones que se definen en el fichero son principalmente las siguientes:
 
 **version** la sintaxis del documento va cambiando con el tiempo por lo que lo primero que se debe hacer es indicar la versión concreta de la sintaxis que se va a utilizar, más [info](https://docs.docker.com/compose/compose-file/).
 
 **services** lo siguiente que aparece es una lista de servicios. a cada uno de los servicios se le debe asignar un nombre.
 
-La documentación de `Docker-compose` es muy completa y puede obtenerse una descripción más completa [aquí](https://docs.docker.com/compose/compose-file/#service-configuration-reference). De todas formas, se dará una perspectiva general de aquellas etiquetas más comunes.
+La documentación de `Docker compose` es muy completa y puede obtenerse una descripción más completa [aquí](https://docs.docker.com/compose/compose-file/#service-configuration-reference). De todas formas, se dará una perspectiva general de aquellas etiquetas más comunes.
 
-**image** se puede especificar la imagen y versión de partida del servicio, incluso se puede usar el IMAGE ID aunque es mucho menos intutitivo. Si la imagen no existe en local, `Docker-compose` trata de descargarla del repositorio público excepto si se ha especificado la etiqueta build.
+**image** se puede especificar la imagen y versión de partida del servicio, incluso se puede usar el IMAGE ID aunque es mucho menos intutitivo. Si la imagen no existe en local, `Docker compose` trata de descargarla del repositorio público excepto si se ha especificado la etiqueta build.
 
-**build** se pueden especificar los parámetros utilizados a la hora de construir el contenedor. El parámetro build es una cadena de texto que especifica la ruta al contexto de construcción. Si se ha especificado tanto build como image, `Docker-compose` trata de construir la imagen asignando el nombre del service a la imagen y el tag. Se puede especificar `context`, `dockerfile` y `args`.
+**build** se pueden especificar los parámetros utilizados a la hora de construir el contenedor. El parámetro build es una cadena de texto que especifica la ruta al contexto de construcción. Si se ha especificado tanto build como image, `Docker compose` trata de construir la imagen asignando el nombre del service a la imagen y el tag. Se puede especificar `context`, `dockerfile` y `args`.
 
   * **Estudiantes con el chip M1 o M2:** Es posible que los contenedores     construidos no funcionen correctamente en vuestros chip. Por suerte, existen soluciones: [enlace](https://everythingdevops.dev/building-x86-images-on-an-apple-m1-chip/)
 
 **args** argumentos en tiempo de construcción que son variables de entorno. 
 
-**depends_on** se utiliza para fijar una dependencia entre servicios del `Docker-compose`.
+**depends_on** se utiliza para fijar una dependencia entre servicios del `Docker compose`.
 
 **ports** los puertos que se exponen. "puerto1:puerto2" donde puerto1 es el puerto que se expone al exterior del contenedor y el puerto2 es el puerto del contenedor. Por ejemplo "8000:80" está exponiendo el puerto 80 como el 8000. Internamente los puertos estarán abiertos y direccionados en función de la imagen.
 
@@ -938,7 +967,7 @@ docker volume create --driver local \
     --opt o=bind db_web
 ```
 
-sería necesario indicar en el fichero `Docker-compose` que se trata de un volumen externo:
+sería necesario indicar en el fichero `Docker compose` que se trata de un volumen externo:
 
 ```{bash eval=F}
 version '3'
@@ -968,6 +997,119 @@ healthcheck:
 ...
 ```
 
+# Glosario de términos técnicos
+
+**Azure Container Instance, ACI**: servicio de Azure que permite ejecutar contenedores directamente en la nube sin gestionar máquinas virtuales ni clústeres.
+
+**Azure Container Registry, ACR**: servicio de Azure que permite almacenar imágenes Docker y OCI en registros privados.
+
+**Capa**: cada una de las etapas que componen una imagen Docker. Instrucciones como `FROM`, `RUN`, `COPY` o `CMD` suelen generar o reutilizar capas durante la construcción de la imagen.
+
+**Contenedor**: unidad de ejecución ligera y portable que incluye la aplicación y sus dependencias. Se ejecuta de forma aislada del sistema anfitrión, pero comparte el kernel del sistema operativo.
+
+**DNS name label**: nombre público asociado a un contenedor o recurso desplegado en Azure, utilizado para construir la URL de acceso.
+
+**Docker Client**: interfaz, normalmente de línea de comandos, que permite al usuario comunicarse con el Docker Engine.
+
+**Docker Compose**: herramienta que permite definir y ejecutar aplicaciones formadas por varios contenedores usando un fichero `compose.yml` o `docker-compose.yml`.
+
+**Docker Engine**: servicio que se encarga de construir imágenes, ejecutar contenedores y gestionar los recursos asociados a Docker.
+
+**Docker Hub**: registro público de imágenes Docker donde se pueden publicar, descargar y versionar imágenes.
+
+**Dockerfile**: fichero de texto que contiene las instrucciones necesarias para construir una imagen Docker.
+
+**IaaS**: modelo cloud en el que el proveedor ofrece infraestructura básica, como máquinas virtuales, red y almacenamiento, pero el usuario administra el sistema operativo y el software instalado.
+
+**Imagen Docker**: plantilla inmutable a partir de la cual se crean contenedores. Incluye el sistema base, librerías, dependencias, configuración y código necesarios para ejecutar una aplicación.
+
+**PaaS**: modelo cloud en el que el proveedor gestiona la infraestructura, el sistema operativo y gran parte del entorno de ejecución, mientras que el usuario se centra en desarrollar y desplegar la aplicación.
+
+**Pull**: operación mediante la cual se descarga una imagen desde un registry a la máquina local o al entorno donde se va a ejecutar.
+
+**Push**: operación mediante la cual se sube una imagen local a un registry remoto.
+
+**Puerto**: punto de comunicación utilizado por una aplicación para recibir conexiones. En Docker es habitual mapear un puerto del host a un puerto interno del contenedor, por ejemplo `8000:8080`.
+
+**Registry**: servicio donde se almacenan imágenes de contenedores. Puede ser público, como Docker Hub, o privado, como Azure Container Registry.
+
+**Resource group**: agrupación lógica de recursos en Azure que facilita su administración conjunta.
+
+**SaaS**: modelo cloud en el que el usuario consume directamente una aplicación ya desplegada y mantenida por el proveedor.
+
+**Servicio**: dentro de Docker Compose, cada uno de los componentes de la aplicación, normalmente asociado a una imagen, configuración de red, puertos, variables de entorno y volúmenes.
+
+**SKU**: nivel o modalidad de servicio contratado en Azure, normalmente asociado a prestaciones, límites y coste.
+
+**Tag**: etiqueta asociada a una imagen que permite identificar una versión concreta, por ejemplo `bulletinboard:1.0` o `bulletinboard:v1`.
+
+**Volumen**: mecanismo que permite persistir datos generados por un contenedor o compartir ficheros entre el host y el contenedor.
+
+# Errores comunes
+
+**Cannot connect to the Docker daemon**
+
+Este error aparece cuando el cliente de Docker no puede comunicarse con el demonio de Docker. Puede deberse a que el servicio no está activo, a un problema de permisos del usuario, a una configuración incorrecta del contexto de Docker o a que el cliente intenta conectarse a otro host. La documentación oficial de Docker lo recoge como uno de los problemas habituales del demonio Docker.  
+
+**Permission denied while trying to connect to the Docker daemon socket**
+
+Suele aparecer en Linux cuando el usuario ejecuta comandos de Docker sin permisos suficientes para acceder al socket del demonio. Es frecuente en instalaciones recién realizadas cuando todavía no se ha configurado correctamente el uso de Docker sin `sudo`.
+
+**Bind for 0.0.0.0:8000 failed: port is already allocated**
+
+Indica que el puerto que se quiere publicar en la máquina anfitriona ya está siendo utilizado por otro proceso o por otro contenedor. Es habitual cuando se intenta lanzar varias veces el mismo contenedor usando el mismo mapeo de puertos.
+
+**No such image**
+
+Aparece cuando se intenta crear o ejecutar un contenedor a partir de una imagen que no existe en local y que Docker tampoco puede descargar con el nombre indicado. Puede deberse a un error tipográfico, a un tag inexistente o a que la imagen pertenece a un registry privado.
+
+**pull access denied**
+
+Este error indica que Docker no puede descargar la imagen solicitada. Puede producirse porque la imagen no existe, porque el nombre del repositorio no es correcto o porque el usuario no tiene permisos para acceder al registry.
+
+**unauthorized: authentication required**
+
+Es habitual al hacer `docker push` o `docker pull` contra un registro privado como Azure Container Registry. Microsoft indica que ACR requiere autenticación para operaciones como subir o descargar imágenes, salvo escenarios concretos de acceso anónimo.  
+
+**InaccessibleImage en Azure Container Instances**
+
+Este error aparece cuando Azure Container Instances no puede acceder a la imagen indicada. Según Microsoft, puede deberse a credenciales incorrectas, permisos insuficientes, reglas de firewall o problemas de acceso entre Azure Container Instances y Azure Container Registry.  
+
+**The requested resource is not found**
+
+En Azure suele aparecer cuando se referencia un grupo de recursos, un registro, una imagen o un contenedor que no existe en la suscripción o región seleccionada. También puede deberse a diferencias entre el nombre real del recurso y el nombre usado en consola.
+
+**Registry name already in use**
+
+El nombre de un Azure Container Registry debe ser único. Si el nombre elegido ya está reservado por otro usuario o recurso, Azure no permite crear el registro con ese identificador.
+
+**Invalid image name o invalid reference format**
+
+Aparece cuando el nombre de la imagen no respeta el formato esperado. Es frecuente al olvidar el registry, escribir mal el tag, usar mayúsculas en lugares no permitidos o introducir espacios.
+
+**denied: requested access to the resource is denied**
+
+Puede aparecer al intentar subir una imagen a un repositorio remoto sin permisos suficientes. También puede producirse si el tag local no apunta al registry correcto.
+
+**Container exits immediately**
+
+El contenedor se crea correctamente, pero se detiene al poco tiempo. Suele ocurrir cuando el proceso principal definido por `CMD` o `ENTRYPOINT` termina, falla al arrancar o no queda ningún proceso activo en primer plano.
+
+**npm install falla durante docker build**
+
+En imágenes basadas en Node.js puede fallar la instalación de dependencias por versiones antiguas de Node, paquetes obsoletos, problemas de red o incompatibilidades entre dependencias. En el ejemplo del tutorial se usa una versión antigua de Node, por lo que este tipo de problema puede aparecer en entornos actuales.
+
+**La web no carga aunque el contenedor está en ejecución**
+
+Puede deberse a un mapeo incorrecto de puertos, a que la aplicación escucha en un puerto distinto al publicado, a que el contenedor no expone el servicio esperado o a restricciones de red del entorno donde se ejecuta.
+
+**docker compose: command not found**
+
+Aparece cuando el sistema no reconoce el comando utilizado para Docker Compose. Puede deberse a que se está usando la sintaxis antigua `docker-compose` en un entorno que solo tiene el plugin moderno, o al caso contrario.
+
+**Errores por arquitectura en equipos Apple Silicon**
+
+En equipos con chips ARM, como M1, M2 o posteriores, algunas imágenes construidas para arquitectura x86 pueden no ejecutarse correctamente o pueden necesitar emulación. Este problema es especialmente común con imágenes antiguas o dependencias que no publican versiones multiplataforma.
 
 # Referencias
 
