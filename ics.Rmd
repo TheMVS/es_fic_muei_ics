@@ -1111,6 +1111,10 @@ Aparece cuando el sistema no reconoce el comando utilizado para Docker Compose. 
 
 En equipos con chips ARM, como M1, M2 o posteriores, algunas imágenes construidas para arquitectura x86 pueden no ejecutarse correctamente o pueden necesitar emulación. Este problema es especialmente común con imágenes antiguas o dependencias que no publican versiones multiplataforma.
 
+**Errores relacionados con región (region) o localización (locale)**
+
+En entornos cloud como Azure, no todos los servicios están disponibles en todas las regiones. Esto puede provocar errores al crear recursos si se selecciona una región donde ese servicio no está soportado o tiene limitaciones. También pueden aparecer inconsistencias al trabajar con nombres de regiones (por ejemplo, diferencias entre formatos como "West Europe" vs `westeurope`).
+
 # Referencias
 
 En caso de querer ampliar el curso o consultar alguna de la información utilizada para el desarrollo del mismo se pueden visitar alguno de los enlaces que aparecen a lo largo del texto del curso o los siguientes enlaces.
